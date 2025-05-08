@@ -3,30 +3,30 @@ def binario_para_float(string_binaria, endian='big'):
         raise ValueError("A string binária deve ter 32 bits.")
 
     if endian == 'little':
-        # Inverte a ordem dos bytes para little-endian
+        
         string_binaria = ''.join([string_binaria[i:i+8][::-1] for i in range(0, 32, 8)][::-1])
 
     sinal = int(string_binaria[0])
     expoente = int(string_binaria[1:9], 2)
     mantissa = string_binaria[9:]
 
-    # Calcula o valor do float
+   
     if expoente == 0:
         if int(mantissa, 2) == 0:
-            return 0.0  # Zero
+            return 0.0  
         else:
-            # Número desnormalizado
+            
             fracao = 0
             for i, bit in enumerate(mantissa):
                 fracao += int(bit) * (2 ** -(i + 1))
             valor_float = (-1)**sinal * 2**(-126) * fracao
     elif expoente == 255:
         if int(mantissa, 2) == 0:
-            return float('inf') if sinal == 0 else float('-inf')  # Infinito
+            return float('inf') if sinal == 0 else float('-inf')  
         else:
-            return float('nan')  # NaN
+            return float('nan')  
     else:
-        # Número normalizado
+        
         fracao = 1.0
         for i, bit in enumerate(mantissa):
             fracao += int(bit) * (2 ** -(i + 1))
